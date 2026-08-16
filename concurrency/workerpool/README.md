@@ -3,6 +3,10 @@
 ## Tujuan (Objective)
 Tujuan dari studi kasus ini adalah memahami bagaimana memproses sejumlah besar pekerjaan (jobs) secara bersamaan (concurrently) menggunakan goroutine, tetapi **membatasi jumlah goroutine yang berjalan bersamaan** menggunakan pola *Worker Pool*. Selain itu, kamu juga harus memastikan **tidak ada goroutine yang leak (bocor)** setelah semua pekerjaan selesai.
 
+## Kapan Pola Ini Digunakan (Real-World Use Case)
+Pola **Worker Pool** sangat krusial digunakan dalam skala *production*, contohnya:
+1. **Image/Video Processing Pipeline:** Saat layanan Anda menerima ratusan upload gambar per menit dan harus melakukan resize/compress. Tanpa Worker Pool, setiap upload akan memicu goroutine baru tanpa batas, sehingga CPU dan RAM meledak. Dengan Worker Pool, Anda membatasi (misal) hanya 10 goroutine yang bekerja bersamaan.
+2. **Bulk Database Operations:** Saat melakukan migrasi atau sinkronisasi data ribuan record dari satu database ke database lain. Worker Pool memastikan koneksi database tidak kehabisan karena terlalu banyak query paralel.
 ## Kasus (Case)
 Kamu diminta untuk melengkapi fungsi `ProcessJobs(jobs []Job, numWorkers int) []Result` di dalam file `workerpool.go`.
 

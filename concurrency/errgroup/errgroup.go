@@ -23,10 +23,16 @@ func MockFetch(ctx context.Context, url string) (string, error) {
 	}
 
 	// Simulasi proses I/O yang mematuhi Context Cancellation
+	// PENTING: Gunakan time.NewTimer, BUKAN time.After!
+	// time.After membuat timer internal yang tidak di-GC sampai expired,
+	// menyebabkan memory leak di hot-path production.
+	timer := time.NewTimer(delay)
+	defer timer.Stop()
+
 	select {
 	case <-ctx.Done():
 		return "", ctx.Err() // Segera berhenti jika context dibatalkan
-	case <-time.After(delay):
+	case <-timer.C:
 		return fmt.Sprintf("Data from %s", url), nil
 	}
 }

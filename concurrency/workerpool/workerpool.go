@@ -42,10 +42,7 @@ func ProcessJobs(jobs []Job, numWorkers int) []Result {
 	}
 
 	for _, job := range jobs {
-		jobChans <- Job{
-			ID:    job.ID,
-			Value: job.Value,
-		}
+		jobChans <- job
 	}
 
 	close(jobChans)

@@ -30,6 +30,30 @@ func BenchmarkProcessDataWithSyncPool(b *testing.B) {
 	
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		ProccesDataWithSyncPool(data)
+		ProcessDataWithSyncPool(data)
+	}
+}
+
+func TestProcessDataWithSyncPool(t *testing.T) {
+	data := []byte("hello")
+	expected := "hello - processed"
+
+	result := ProcessDataWithSyncPool(data)
+	if result != expected {
+		t.Errorf("Expected %q, got %q", expected, result)
+	}
+}
+
+// TestProcessDataWithSyncPool_Reuse memastikan buffer yang di-reuse dari pool
+// tidak menyebabkan data corruption (data dari eksekusi sebelumnya ikut tercetak).
+func TestProcessDataWithSyncPool_Reuse(t *testing.T) {
+	first := ProcessDataWithSyncPool([]byte("first"))
+	second := ProcessDataWithSyncPool([]byte("second"))
+
+	if first != "first - processed" {
+		t.Errorf("Expected %q, got %q", "first - processed", first)
+	}
+	if second != "second - processed" {
+		t.Errorf("Expected %q, got %q", "second - processed", second)
 	}
 }

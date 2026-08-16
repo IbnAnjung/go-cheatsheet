@@ -28,7 +28,7 @@ var bufferPool = &sync.Pool{
 	},
 }
 
-func ProccesDataWithSyncPool(data []byte) string {
+func ProcessDataWithSyncPool(data []byte) string {
 	buf := bufferPool.Get().(*bytes.Buffer)
 	defer func() {
 		buf.Reset()
